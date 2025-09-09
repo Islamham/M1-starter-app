@@ -146,15 +146,36 @@ class ProfileViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isLoadingPhoto = isLoading)
     }
 
-    fun uploadProfilePicture(pictureUri: Uri) {
+    fun uploadProfilePicture(pictureUri: Uri, onSuccess: () -> Unit = {}) {
         viewModelScope.launch {
-            val currentUser = _uiState.value.user ?: return@launch
-            val updatedUser = currentUser.copy(profilePicture = pictureUri.toString())
-            _uiState.value = _uiState.value.copy(
-                isLoadingPhoto = false,
-                user = updatedUser,
-                successMessage = "Profile picture updated successfully!"
-            )
+
+            _uiState.value =
+                _uiState.value.copy(
+                    isSavingProfile = true,
+                    isLoadingPhoto = true,
+                    errorMessage = null,
+                    successMessage = null
+                )
+
+            val result = profileRepository.uploadProfilePicture(pictureUri)
+            if (result.isSuccess) {
+                val updatedUser = result.getOrNull()!!
+                _uiState.value = _uiState.value.copy(
+                    isSavingProfile = false,
+                    isLoadingPhoto = true,
+                    user = updatedUser,
+                    successMessage = "Profile picture updated successfully!"
+                )
+                onSuccess()
+            } else {
+                val error = result.exceptionOrNull()
+                Log.e(TAG, "Failed to update profile picture", error)
+                val errorMessage = error?.message ?: "Failed to update profile picture"
+                _uiState.value = _uiState.value.copy(
+                    isSavingProfile = false,
+                    errorMessage = errorMessage
+                )
+            }
         }
     }
 

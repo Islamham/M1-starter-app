@@ -63,7 +63,10 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun updateProfile(name: String, bio: String): Result<User> {
         return try {
             val updateRequest = UpdateProfileRequest(name = name, bio = bio)
-            val response = userInterface.updateProfile("", updateRequest) // Auth header is handled by interceptor
+            val response = userInterface.updateProfile(
+                "",
+                updateRequest
+            ) // Auth header is handled by interceptor
             if (response.isSuccessful && response.body()?.data != null) {
                 Result.success(response.body()!!.data!!.user)
             } else {
@@ -90,7 +93,10 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun updateUserHobbies(hobbies: List<String>): Result<User> {
         return try {
             val updateRequest = UpdateProfileRequest(hobbies = hobbies)
-            val response = userInterface.updateProfile("", updateRequest) // Auth header is handled by interceptor
+            val response = userInterface.updateProfile(
+                "",
+                updateRequest
+            ) // Auth header is handled by interceptor
             if (response.isSuccessful && response.body()?.data != null) {
                 Result.success(response.body()!!.data!!.user)
             } else {
@@ -117,7 +123,8 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun getAvailableHobbies(): Result<List<String>> {
         return try {
-            val response = hobbyInterface.getAvailableHobbies("") // Auth header is handled by interceptor
+            val response =
+                hobbyInterface.getAvailableHobbies("") // Auth header is handled by interceptor
             if (response.isSuccessful && response.body()?.data != null) {
                 Result.success(response.body()!!.data!!.hobbies)
             } else {
@@ -141,9 +148,37 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadProfilePicture(imageUri: Uri): Result<String> {
-        TODO("Not yet implemented")
+    override suspend fun uploadProfilePicture(imageUri: Uri): Result<User> {
+        return try {
+            val updateRequest = UpdateProfileRequest(profilePicture = imageUri.toString())
+            val response = userInterface.updateProfile(
+                "",
+                updateRequest
+            ) // Auth header is handled by interceptor
+            if (response.isSuccessful && response.body()?.data != null) {
+                Result.success(response.body()!!.data!!.user)
+            } else {
+                val errorBodyString = response.errorBody()?.string()
+                val errorMessage = parseErrorMessage(errorBodyString, "Failed to update hobbies.")
+
+                Log.e(TAG, "Failed to update hobbies: $errorMessage")
+                Result.failure(Exception(errorMessage))
+            }
+        } catch (e: java.net.SocketTimeoutException) {
+            Log.e(TAG, "Network timeout while updating hobbies", e)
+            Result.failure(e)
+        } catch (e: java.net.UnknownHostException) {
+            Log.e(TAG, "Network connection failed while updating hobbies", e)
+            Result.failure(e)
+        } catch (e: java.io.IOException) {
+            Log.e(TAG, "IO error while updating hobbies", e)
+            Result.failure(e)
+        } catch (e: retrofit2.HttpException) {
+            Log.e(TAG, "HTTP error while updating hobbies: ${e.code()}", e)
+            Result.failure(e)
+        }
     }
+
 
     override suspend fun deleteProfile(): Result<Unit> {
         return try {

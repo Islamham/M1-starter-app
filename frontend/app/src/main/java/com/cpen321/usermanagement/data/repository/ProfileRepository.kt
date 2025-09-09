@@ -9,7 +9,7 @@ interface ProfileRepository {
     suspend fun updateUserHobbies(hobbies: List<String>): Result<User>
     suspend fun getAvailableHobbies(): Result<List<String>>
 
-    suspend fun uploadProfilePicture(imageUri: Uri): Result<String>
+    suspend fun uploadProfilePicture(imageUri: Uri): Result<User>
 
     suspend fun deleteProfile(): Result<Unit>
 }
