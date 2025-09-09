@@ -150,7 +150,11 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             val currentUser = _uiState.value.user ?: return@launch
             val updatedUser = currentUser.copy(profilePicture = pictureUri.toString())
-            _uiState.value = _uiState.value.copy(isLoadingPhoto = false, user= updatedUser, successMessage = "Profile picture updated successfully!")
+            _uiState.value = _uiState.value.copy(
+                isLoadingPhoto = false,
+                user = updatedUser,
+                successMessage = "Profile picture updated successfully!"
+            )
         }
     }
 
@@ -180,6 +184,20 @@ class ProfileViewModel @Inject constructor(
                     isSavingProfile = false,
                     errorMessage = errorMessage
                 )
+            }
+        }
+    }
+
+    fun deleteProfile(onSuccess: () -> Unit = {}) {
+        viewModelScope.launch {
+            val result = profileRepository.deleteProfile()
+            if (result.isSuccess) {
+                onSuccess()
+            } else {
+                val error = result.exceptionOrNull()
+                Log.e(TAG, "Failed to delete account", error)
+                val errorMessage = error?.message ?: "Failed to delete account"
+                _uiState.value = _uiState.value.copy(errorMessage = errorMessage)
             }
         }
     }
