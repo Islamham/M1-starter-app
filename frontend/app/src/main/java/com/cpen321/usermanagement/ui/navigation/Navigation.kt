@@ -20,10 +20,12 @@ import com.cpen321.usermanagement.ui.screens.ManageProfileScreen
 import com.cpen321.usermanagement.ui.screens.ProfileScreenActions
 import com.cpen321.usermanagement.ui.screens.ProfileCompletionScreen
 import com.cpen321.usermanagement.ui.screens.ProfileScreen
+import com.cpen321.usermanagement.ui.screens.ViewWeatherScreen
 import com.cpen321.usermanagement.ui.viewmodels.AuthViewModel
 import com.cpen321.usermanagement.ui.viewmodels.MainViewModel
 import com.cpen321.usermanagement.ui.viewmodels.NavigationViewModel
 import com.cpen321.usermanagement.ui.viewmodels.ProfileViewModel
+import com.cpen321.usermanagement.ui.viewmodels.WeatherViewModel
 
 object NavRoutes {
     const val LOADING = "loading"
@@ -33,6 +35,7 @@ object NavRoutes {
     const val MANAGE_PROFILE = "manage_profile"
     const val MANAGE_HOBBIES = "manage_hobbies"
     const val PROFILE_COMPLETION = "profile_completion"
+    const val VIEW_WEATHER = "view_weather"
 }
 
 @Composable
@@ -47,6 +50,7 @@ fun AppNavigation(
     val authViewModel: AuthViewModel = hiltViewModel()
     val profileViewModel: ProfileViewModel = hiltViewModel()
     val mainViewModel: MainViewModel = hiltViewModel()
+    val WeatherViewModel: WeatherViewModel = hiltViewModel()
 
     // Handle navigation events from NavigationStateManager
     LaunchedEffect(navigationEvent) {
@@ -63,6 +67,7 @@ fun AppNavigation(
         navController = navController,
         authViewModel = authViewModel,
         profileViewModel = profileViewModel,
+        weatherViewModel = WeatherViewModel,
         mainViewModel = mainViewModel,
         navigationStateManager = navigationStateManager
     )
@@ -128,6 +133,11 @@ private fun handleNavigationEvent(
             navigationStateManager.clearNavigationEvent()
         }
 
+        is NavigationEvent.NavigateToViewWeather -> {
+            navController.navigate(NavRoutes.VIEW_WEATHER)
+            navigationStateManager.clearNavigationEvent()
+        }
+
         is NavigationEvent.NavigateBack -> {
             navController.popBackStack()
             navigationStateManager.clearNavigationEvent()
@@ -149,6 +159,7 @@ private fun AppNavHost(
     navController: NavHostController,
     authViewModel: AuthViewModel,
     profileViewModel: ProfileViewModel,
+    weatherViewModel: WeatherViewModel,
     mainViewModel: MainViewModel,
     navigationStateManager: NavigationStateManager
 ) {
@@ -190,7 +201,8 @@ private fun AppNavHost(
                     onBackClick = { navigationStateManager.navigateBack() },
                     onManageProfileClick = { navigationStateManager.navigateToManageProfile() },
                     onManageHobbiesClick = { navigationStateManager.navigateToManageHobbies() },
-                    onAccountDeleted = { navigationStateManager.handleAccountDeletion() }
+                    onAccountDeleted = { navigationStateManager.handleAccountDeletion() },
+                    onViewWeatherClick = { navigationStateManager.navigateToViewWeather() }
                 )
             )
         }
@@ -204,6 +216,14 @@ private fun AppNavHost(
 
         composable(NavRoutes.MANAGE_HOBBIES) {
             ManageHobbiesScreen(
+                profileViewModel = profileViewModel,
+                onBackClick = { navigationStateManager.navigateBack() }
+            )
+        }
+
+        composable(NavRoutes.VIEW_WEATHER) {
+            ViewWeatherScreen(
+                weatherViewModel = weatherViewModel,
                 profileViewModel = profileViewModel,
                 onBackClick = { navigationStateManager.navigateBack() }
             )

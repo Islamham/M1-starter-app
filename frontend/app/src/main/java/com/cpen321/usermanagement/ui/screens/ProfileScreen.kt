@@ -48,7 +48,8 @@ data class ProfileScreenActions(
     val onBackClick: () -> Unit,
     val onManageProfileClick: () -> Unit,
     val onManageHobbiesClick: () -> Unit,
-    val onAccountDeleted: () -> Unit
+    val onAccountDeleted: () -> Unit,
+    val onViewWeatherClick: () -> Unit
 )
 
 private data class ProfileScreenCallbacks(
@@ -56,6 +57,7 @@ private data class ProfileScreenCallbacks(
     val onManageProfileClick: () -> Unit,
     val onManageHobbiesClick: () -> Unit,
     val onDeleteAccountClick: () -> Unit,
+    val onViewWeatherClick: () -> Unit,
     val onDeleteDialogDismiss: () -> Unit,
     val onDeleteDialogConfirm: () -> Unit,
     val onSuccessMessageShown: () -> Unit,
@@ -93,6 +95,7 @@ fun ProfileScreen(
             onDeleteAccountClick = {
                 dialogState = dialogState.copy(showDeleteDialog = true)
             },
+            onViewWeatherClick = actions.onViewWeatherClick,
             onDeleteDialogDismiss = {
                 dialogState = dialogState.copy(showDeleteDialog = false)
             },
@@ -141,7 +144,8 @@ private fun ProfileContent(
             isLoading = uiState.isLoadingProfile,
             onManageProfileClick = callbacks.onManageProfileClick,
             onManageHobbiesClick = callbacks.onManageHobbiesClick,
-            onDeleteAccountClick = callbacks.onDeleteAccountClick
+            onDeleteAccountClick = callbacks.onDeleteAccountClick,
+            onViewWeatherClick = callbacks.onViewWeatherClick,
         )
     }
 
@@ -187,6 +191,7 @@ private fun ProfileBody(
     onManageProfileClick: () -> Unit,
     onManageHobbiesClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
+    onViewWeatherClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -205,7 +210,8 @@ private fun ProfileBody(
                 ProfileMenuItems(
                     onManageProfileClick = onManageProfileClick,
                     onManageHobbiesClick = onManageHobbiesClick,
-                    onDeleteAccountClick = onDeleteAccountClick
+                    onDeleteAccountClick = onDeleteAccountClick,
+                    onViewWeatherClick = onViewWeatherClick,
                 )
             }
         }
@@ -217,6 +223,7 @@ private fun ProfileMenuItems(
     onManageProfileClick: () -> Unit,
     onManageHobbiesClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
+    onViewWeatherClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val spacing = LocalSpacing.current
@@ -231,7 +238,8 @@ private fun ProfileMenuItems(
     ) {
         ProfileSection(
             onManageProfileClick = onManageProfileClick,
-            onManageHobbiesClick = onManageHobbiesClick
+            onManageHobbiesClick = onManageHobbiesClick,
+            onViewWeatherClick = onViewWeatherClick
         )
 
         AccountSection(
@@ -244,6 +252,7 @@ private fun ProfileMenuItems(
 private fun ProfileSection(
     onManageProfileClick: () -> Unit,
     onManageHobbiesClick: () -> Unit,
+    onViewWeatherClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -252,8 +261,10 @@ private fun ProfileSection(
     ) {
         ManageProfileButton(onClick = onManageProfileClick)
         ManageHobbiesButton(onClick = onManageHobbiesClick)
+        ViewWeatherButton(onClick = onViewWeatherClick)
     }
 }
+
 
 @Composable
 private fun AccountSection(
@@ -286,6 +297,17 @@ private fun ManageHobbiesButton(
     MenuButtonItem(
         text = stringResource(R.string.manage_hobbies),
         iconRes = R.drawable.ic_heart_smile,
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun ViewWeatherButton(
+    onClick: () -> Unit
+) {
+    MenuButtonItem(
+        text=stringResource(R.string.view_weather),
+        iconRes = R.drawable.ic_weather,
         onClick = onClick,
     )
 }

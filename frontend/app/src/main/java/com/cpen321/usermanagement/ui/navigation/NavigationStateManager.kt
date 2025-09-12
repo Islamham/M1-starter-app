@@ -13,6 +13,7 @@ sealed class NavigationEvent {
     object NavigateToProfile : NavigationEvent()
     object NavigateToManageProfile : NavigationEvent()
     object NavigateToManageHobbies : NavigationEvent()
+    object NavigateToViewWeather: NavigationEvent()
     data class NavigateToAuthWithMessage(val message: String) : NavigationEvent()
     data class NavigateToMainWithMessage(val message: String) : NavigationEvent()
     object NavigateBack : NavigationEvent()
@@ -156,6 +157,11 @@ class NavigationStateManager @Inject constructor() {
         _navigationEvent.value = NavigationEvent.NavigateToManageHobbies
         _navigationState.value =
             _navigationState.value.copy(currentRoute = NavRoutes.MANAGE_HOBBIES)
+    }
+
+    fun navigateToViewWeather() {
+        _navigationEvent.value = NavigationEvent.NavigateToViewWeather
+        _navigationState.value = _navigationState.value.copy(currentRoute = NavRoutes.VIEW_WEATHER)
     }
 
     /**
