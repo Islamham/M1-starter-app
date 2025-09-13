@@ -179,7 +179,6 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun deleteProfile(): Result<Unit> {
         return try {
             val response = userInterface.deleteProfile("") // Auth header is handled by interceptor
