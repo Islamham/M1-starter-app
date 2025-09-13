@@ -257,6 +257,21 @@ fun WeatherCard(weather: WeatherCurrent?) {
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(spacing.medium)
             )
+            Text(
+                text = "Wind Speed: ${weather.wind_speed} km/h",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(spacing.medium)
+            )
+            Text(
+                text = "Feels Like: ${weather.feelslike}°C",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(spacing.medium)
+            )
+            Text(
+                text = "Visibility: ${weather.visibility} km",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(spacing.medium)
+            )
         } else {
             Text(
                 text = stringResource(R.string.no_weather_data),
