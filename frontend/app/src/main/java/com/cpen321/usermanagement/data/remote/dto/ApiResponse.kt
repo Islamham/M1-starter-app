@@ -13,3 +13,11 @@ data class ApiResponse<T>(
     val error: String? = null,
     val details: List<ValidationError>? = null
 )
+
+data class WeatherApiResponse(
+    val request: WeatherRequest,
+    val location: WeatherLocation,
+    val current: WeatherCurrent
+)
+
+

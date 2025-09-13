@@ -39,6 +39,7 @@ import com.cpen321.usermanagement.ui.viewmodels.AuthViewModel
 import com.cpen321.usermanagement.ui.viewmodels.ProfileUiState
 import com.cpen321.usermanagement.ui.viewmodels.ProfileViewModel
 import com.cpen321.usermanagement.ui.theme.LocalSpacing
+import com.cpen321.usermanagement.ui.viewmodels.WeatherViewModel
 
 private data class ProfileDialogState(
     val showDeleteDialog: Boolean = false
@@ -68,6 +69,7 @@ private data class ProfileScreenCallbacks(
 fun ProfileScreen(
     authViewModel: AuthViewModel,
     profileViewModel: ProfileViewModel,
+    weatherViewModel: WeatherViewModel,
     actions: ProfileScreenActions
 ) {
     val uiState by profileViewModel.uiState.collectAsState()
@@ -95,7 +97,10 @@ fun ProfileScreen(
             onDeleteAccountClick = {
                 dialogState = dialogState.copy(showDeleteDialog = true)
             },
-            onViewWeatherClick = actions.onViewWeatherClick,
+            onViewWeatherClick = {
+                actions.onViewWeatherClick()
+                weatherViewModel.getWeather()
+            },
             onDeleteDialogDismiss = {
                 dialogState = dialogState.copy(showDeleteDialog = false)
             },

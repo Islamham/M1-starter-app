@@ -12,6 +12,8 @@ object RetrofitClient {
     private const val BASE_URL = BuildConfig.API_BASE_URL
     private const val IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL
 
+    private const val WEATHER_BASE_URL = "http://api.weatherstack.com/"
+
     private var authToken: String? = null
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -34,10 +36,17 @@ object RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    private val weatherRetrofit = Retrofit.Builder()
+        .baseUrl(WEATHER_BASE_URL)
+        .client(httpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
     val authInterface: AuthInterface = retrofit.create(AuthInterface::class.java)
     val imageInterface: ImageInterface = retrofit.create(ImageInterface::class.java)
     val userInterface: UserInterface = retrofit.create(UserInterface::class.java)
     val hobbyInterface: HobbyInterface = retrofit.create(HobbyInterface::class.java)
+    val weatherInterface: WeatherInterface = weatherRetrofit.create(WeatherInterface::class.java)
 
     fun setAuthToken(token: String?) {
         authToken = token

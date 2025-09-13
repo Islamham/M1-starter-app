@@ -4,6 +4,8 @@ import com.cpen321.usermanagement.data.repository.AuthRepository
 import com.cpen321.usermanagement.data.repository.AuthRepositoryImpl
 import com.cpen321.usermanagement.data.repository.ProfileRepository
 import com.cpen321.usermanagement.data.repository.ProfileRepositoryImpl
+import com.cpen321.usermanagement.data.repository.WeatherRepository
+import com.cpen321.usermanagement.data.repository.WeatherRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +30,13 @@ object RepositoryModule {
         profileRepositoryImpl: ProfileRepositoryImpl
     ): ProfileRepository {
         return profileRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(
+        weatherRepositoryImpl: WeatherRepositoryImpl
+    ): WeatherRepository {
+        return weatherRepositoryImpl
     }
 }

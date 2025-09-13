@@ -50,7 +50,7 @@ fun AppNavigation(
     val authViewModel: AuthViewModel = hiltViewModel()
     val profileViewModel: ProfileViewModel = hiltViewModel()
     val mainViewModel: MainViewModel = hiltViewModel()
-    val WeatherViewModel: WeatherViewModel = hiltViewModel()
+    val weatherViewModel: WeatherViewModel = hiltViewModel()
 
     // Handle navigation events from NavigationStateManager
     LaunchedEffect(navigationEvent) {
@@ -67,7 +67,7 @@ fun AppNavigation(
         navController = navController,
         authViewModel = authViewModel,
         profileViewModel = profileViewModel,
-        weatherViewModel = WeatherViewModel,
+        weatherViewModel = weatherViewModel,
         mainViewModel = mainViewModel,
         navigationStateManager = navigationStateManager
     )
@@ -197,6 +197,7 @@ private fun AppNavHost(
             ProfileScreen(
                 authViewModel = authViewModel,
                 profileViewModel = profileViewModel,
+                weatherViewModel = weatherViewModel,
                 actions = ProfileScreenActions(
                     onBackClick = { navigationStateManager.navigateBack() },
                     onManageProfileClick = { navigationStateManager.navigateToManageProfile() },
@@ -223,8 +224,8 @@ private fun AppNavHost(
 
         composable(NavRoutes.VIEW_WEATHER) {
             ViewWeatherScreen(
-                weatherViewModel = weatherViewModel,
                 profileViewModel = profileViewModel,
+                weatherViewModel = weatherViewModel,
                 onBackClick = { navigationStateManager.navigateBack() }
             )
         }

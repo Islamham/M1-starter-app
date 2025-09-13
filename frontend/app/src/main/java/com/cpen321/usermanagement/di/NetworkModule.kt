@@ -1,10 +1,12 @@
 package com.cpen321.usermanagement.di
 
+import androidx.compose.ui.geometry.Rect
 import com.cpen321.usermanagement.data.remote.api.AuthInterface
 import com.cpen321.usermanagement.data.remote.api.HobbyInterface
 import com.cpen321.usermanagement.data.remote.api.ImageInterface
 import com.cpen321.usermanagement.data.remote.api.RetrofitClient
 import com.cpen321.usermanagement.data.remote.api.UserInterface
+import com.cpen321.usermanagement.data.remote.api.WeatherInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,5 +39,11 @@ object NetworkModule {
     @Singleton
     fun provideHobbyService(): HobbyInterface {
         return RetrofitClient.hobbyInterface
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherService(): WeatherInterface {
+        return RetrofitClient.weatherInterface
     }
 }
